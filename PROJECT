@@ -1,5 +1,5 @@
 version: "2"
-domain: k8s.mz.com
+domain: k8s.scartel.dc
 repo: github.com/raserge/configmap-operator
 resources:
 - group: configs
