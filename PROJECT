@@ -1,0 +1,7 @@
+version: "2"
+domain: k8s.mz.com
+repo: github.com/raserge/configmap-operator
+resources:
+- group: configs
+  version: v1alpha1
+  kind: ConfigMapMake
