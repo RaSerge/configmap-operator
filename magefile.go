@@ -12,7 +12,6 @@ import (
 	"os"
 	"os/exec"
 	"os/user"
-	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -326,7 +325,6 @@ func buildImg(arch string) error {
 	defer os.Remove(tmp.Name())
 	buf := bufio.NewWriter(tmp)
 	fmt.Fprintf(buf, "FROM %s\n", baseImage)
-	fmt.Fprintf(buf, "ADD LICENSE /LICENSE\n")
 	fmt.Fprintf(buf, "LABEL os=linux")
 	fmt.Fprintf(buf, " arch=%s", arch)
 	fmt.Fprintf(buf, " binary=%s", trg.Name())
@@ -343,13 +341,7 @@ func buildImg(arch string) error {
 	}
 
 	ctxDir := binDir(arch)
-	curDir, err := os.Getwd()
 	if err != nil {
-		return err
-	}
-	srcLicense := path.Join(curDir, "LICENSE")
-	dstLicense := path.Join(ctxDir, "LICENSE")
-	if err := os.Link(srcLicense, dstLicense); err != nil && !os.IsExist(err) {
 		return err
 	}
 
