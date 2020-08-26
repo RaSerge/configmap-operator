@@ -427,7 +427,7 @@ func Push() error {
 }
 
 func Generate() error {
-	mg.Deps(generateCode, generateCDRs, generateRBAC, generateDocs)
+	mg.Deps(generateCode, generateCRDs, generateRBAC, generateDocs)
 
 	return nil
 }
@@ -436,7 +436,7 @@ func generateCode() error {
 	return sh.Run("controller-gen", "object:headerFile=./hack/boilerplate.go.txt", "paths=./pkg/api/...")
 }
 
-func generateCDRs() error {
+func generateCRDs() error {
 	out, err := sh.Output("controller-gen", "crd:crdVersions=v1", "paths=./pkg/...", "output:stdout")
 	if err != nil {
 		return err
@@ -445,7 +445,7 @@ func generateCDRs() error {
 }
 
 func generateRBAC() error {
-	out, err := sh.Output("controller-gen", "rbac:roleName=configmapmake-controller", "paths=./cmd/...;./pkg/...", "output:stdout")
+	out, err := sh.Output("controller-gen", "rbac:roleName=configmapmake-controller", "paths=./pkg/...", "output:stdout")
 	if err != nil {
 		return err
 	}
