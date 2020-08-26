@@ -70,7 +70,7 @@ func (t *target) Registry() string {
 	if s := os.Getenv("REGISTRY"); s != "" {
 		return s
 	}
-	return "registry.hub.docker.com/mzinc"
+	return "prod-docker-repo.scartel.dc"
 }
 
 func (t *target) initRepoData() error {
@@ -237,7 +237,7 @@ func Bins() error {
 			"buildUnix", strconv.FormatInt(now.Unix(), 10),
 		)),
 	}
-	src := "/src/cmd/" + trg.Name()
+	src := "/src/" //+ trg.Name()
 	for _, arch := range arches {
 		if err := mkDir(binDir(arch)); err != nil {
 			return err
