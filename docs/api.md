@@ -14,7 +14,7 @@
 
 ## ConfigMapMake
 
-ConfigMapMake holds configuration data with embedded configs.
+ConfigMapMake holds configuration data.
 
 | Field | Description | Type | Required |
 | ----- | ----------- | ---- | -------- |
