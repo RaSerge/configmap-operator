@@ -34,7 +34,9 @@ const (
 	baseImage  = "gcr.io/distroless/static:latest"
 )
 
-var arches = []string{"amd64", "arm", "arm64"}
+// var arches = []string{"amd64", "arm", "arm64"}
+
+var arches = []string{"amd64"}
 
 var trg = target{name: name, repo: repo}
 
