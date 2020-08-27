@@ -1,0 +1,26 @@
+language: generic
+sudo: required
+
+branches:
+  only:
+  - master
+
+services:
+  - docker
+
+before_install:
+  - export VERSION=`git describe --exact-match --abbrev=0`
+
+script:
+  - make docker-build-wo-test
+
+deploy:
+  provider: script
+  script: make docker-login && make docker-push && docker logout
+  on:
+    tags: true
+    branch: master
+
+# don't notify me when things fail
+notifications:
+  email: false

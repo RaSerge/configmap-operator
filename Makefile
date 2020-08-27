@@ -1,7 +1,7 @@
 # Current Operator version
 VERSION ?= 0.0.1
 # Default bundle image tag
-BUNDLE_IMG ?= controller-bundle:$(VERSION)
+BUNDLE_IMG ?= configmap-operator-bundle:$(VERSION)
 # Options for 'bundle-build'
 ifneq ($(origin CHANNELS), undefined)
 BUNDLE_CHANNELS := --channels=$(CHANNELS)
@@ -11,8 +11,10 @@ BUNDLE_DEFAULT_CHANNEL := --default-channel=$(DEFAULT_CHANNEL)
 endif
 BUNDLE_METADATA_OPTS ?= $(BUNDLE_CHANNELS) $(BUNDLE_DEFAULT_CHANNEL)
 
+REPO ?= sergioalvares
+
 # Image URL to use all building/pushing image targets
-IMG ?= controller:latest
+IMG ?= configmap-operator:$(VERSION)
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
 
@@ -66,13 +68,20 @@ vet:
 generate: controller-gen
 	$(CONTROLLER_GEN) object:headerFile="hack/boilerplate.go.txt" paths="./..."
 
+docker-login:
+	echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_LOGIN} --password-stdin
+
 # Build the docker image
 docker-build: test
-	docker build . -t ${IMG}
+	docker build . -t ${REPO}/${IMG}
+
+# Build the docker image wo tests
+docker-build-wo-test:
+	docker build . -t ${REPO}/${IMG}
 
 # Push the docker image
 docker-push:
-	docker push ${IMG}
+	docker push ${REPO}/${IMG}
 
 # find or download controller-gen
 # download controller-gen if necessary

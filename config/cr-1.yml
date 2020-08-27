@@ -1,0 +1,50 @@
+---
+apiVersion: configmaps.scartel.dc/v1alpha1
+kind: ConfigMapMake
+metadata:
+  name: vector-config-1
+  namespace: test-kafka
+  labels:
+    app: vector
+spec:
+  template:
+    metadata:
+      # optional: name defaults to same as ConfigMapSecret
+      name: vector-config-1
+      labels:
+        app: vector
+    data:
+        vector-main.toml: |
+          data_dir = "/vector-data-dir"
+          [log_schema]
+            host_key = "host"
+            message_key = "message"
+            source_type_key = "source_type"
+            timestamp_key = "timestamp"
+          [sources.kubernetes_logs]
+            type = "kubernetes_logs"
+          [sources.internal_metrics]
+            type = "internal_metrics"
+          [transforms.k8s_logs_splitter]
+            type = "swimlanes"
+            inputs = ["kubernetes_logs"]
+            [transforms.k8s_logs_splitter.lanes.kube-system_events]
+              type = "check_fields"
+              "namespace_name.eq" = "kube-system"
+
+          [sinks.metrics]
+            type = "prometheus"
+            inputs = ["internal_metrics"]
+            address = "0.0.0.0:8888" # required
+            namespace = "vector" # required
+
+          [sinks.splunk_hec]
+            type = "splunk_hec"
+            inputs = ["k8s_logs_splitter.kube-system_events"]
+            host = "https://dev-splunk-srch01.scartel.dc:8088" # required
+            token = "72be9941-f5be-407c-8279-939d11a2c170" # required
+            healthcheck = false # optional, default
+            batch.timeout_secs = 1 # seconds
+            batch.max_bytes = 10000
+            encoding = "json"
+            tls.verify_certificate = false

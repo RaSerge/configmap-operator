@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: configmapmake-controller
-  namespace: kube-system
+  namespace: configmap-operator
   labels:
     control-plane: configmapmake-controller
 spec:
@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
         - name: controller
-          image: prod-docker-repo.scartel.dc/configmapmake-controller:v0.3.0
+          image: sergioalvares/configmap-operator:0.0.1
           imagePullPolicy: Always
           command:
-            - /configmapmake-controller
+            - /manager
             - --health-addr=:9090
             - --metrics-addr=:9091
             - --enable-leader-election
