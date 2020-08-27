@@ -37,14 +37,3 @@ spec:
             inputs = ["internal_metrics"]
             address = "0.0.0.0:8888" # required
             namespace = "vector" # required
-
-          [sinks.splunk_hec]
-            type = "splunk_hec"
-            inputs = ["k8s_logs_splitter.kube-system_events"]
-            host = "https://dev-splunk-srch01.scartel.dc:8088" # required
-            token = "72be9941-f5be-407c-8279-939d11a2c170" # required
-            healthcheck = false # optional, default
-            batch.timeout_secs = 1 # seconds
-            batch.max_bytes = 10000
-            encoding = "json"
-            tls.verify_certificate = false
