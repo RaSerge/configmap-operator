@@ -319,12 +319,13 @@ func (r *ConfigMapMake) renderConfig(ctx context.Context, cmm *v1alpha1.ConfigMa
 	}
 	varMapFn := expansion.MappingFuncFor(vars)
 
-	data := make(map[string][]byte)
+	data := make(map[string]string)
+	binarydata := make(map[string][]byte)
 	for k, v := range cmm.Spec.Template.Data {
-		data[k] = []byte(expansion.Expand(v, varMapFn))
+		data[k] = string(expansion.Expand(v, varMapFn))
 	}
 	for k, v := range cmm.Spec.Template.BinaryData {
-		data[k] = []byte(expansion.Expand(string(v), varMapFn))
+		binarydata[k] = []byte(expansion.Expand(string(v), varMapFn))
 	}
 
 	meta := cmm.Spec.Template.Metadata
@@ -339,7 +340,8 @@ func (r *ConfigMapMake) renderConfig(ctx context.Context, cmm *v1alpha1.ConfigMa
 			Labels:      meta.Labels,
 			Annotations: meta.Annotations,
 		},
-		BinaryData: data,
+		BinaryData: binarydata,
+		Data:       data,
 	}
 	if err := controllerutil.SetControllerReference(cmm, config, r.scheme); err != nil {
 		return nil, internalError, err
